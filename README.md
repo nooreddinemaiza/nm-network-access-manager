@@ -52,7 +52,7 @@ Clonez ce dépôt directement dans le répertoire racine de votre serveur web :
 
 ```bash
 cd /var/www/
-git clone https://github.com/votre-utilisateur/freeradius-dashboard.git
+git clone https://github.com/nooreddinemaiza/freeradius-dashboard.git
 ```
 
 > Vous pouvez renommer le dossier cloné selon vos préférences ou conserver le nom `freeradius-dashboard`.
