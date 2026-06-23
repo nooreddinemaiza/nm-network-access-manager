@@ -14,6 +14,9 @@ class Environment
 
     public function __construct(?string $filePath = null)
     {
+        if (is_null($filePath) && !File::exists('config', '.env')) {
+            File::copy('config', 'env.backup', 'config', '.env');
+        }
         $this->filePath = $filePath ?? $this->getDefaultPath();
     }
 

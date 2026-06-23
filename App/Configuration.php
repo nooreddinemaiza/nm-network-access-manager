@@ -26,6 +26,7 @@ class Configuration
 
     public function __construct(Environment $env, array $data = [])
     {
+        $this->setEnvironment();
         $this->data = $data;
         $this->env = $env;
     }
@@ -141,9 +142,8 @@ class Configuration
 
     public function setEnvironment()
     {
-        File::createEmpty('config','.env');
-        File::createDirectory('storage', 'Logs');
-        File::createEmpty('log','app.log');        
+        if (!File::exists('config', '.env')) File::copy('config', 'env.backup', 'config', '.env');
+        if (!File::exists('log', 'app.log')) File::copy('config', 'env.backup', 'log', 'app.log');
     }
     /**
      * Valide la lecture de la présentation (POST)

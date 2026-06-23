@@ -20,8 +20,6 @@ Core\Autoloader::register();
 
 File::init(ROOT_DIR);
 
-
-
 $router = Router::create();
 $request = Request::create();
 if (!Configuration::isComplete()) {

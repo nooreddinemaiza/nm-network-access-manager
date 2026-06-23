@@ -37,7 +37,6 @@ $router->group(['prefix' => '/installation'], function () use ($router, $config)
 
     // Étape 0 : Présentation & pré-requis
     $router->get('/welcome', function (Request $request) use ($config) {
-        $config->setEnvironment();
         if (!$config->canAccessStep(0)) {
             return $config->redirectToCurrentStep();
         }
