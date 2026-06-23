@@ -246,6 +246,6 @@ Passionné par la conception de solutions hybrides combinant développement web 
 
 ## 📌 Notes
 
-Cette plateforme est en évolution continue et peut intégrer de nouvelles fonctionnalités liées à :
+Cette plateforme est en évolution continue et peut intégrer de nouvelles fonctionnalités.
 
 ```
