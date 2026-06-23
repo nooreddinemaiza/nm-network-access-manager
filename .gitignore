@@ -6,7 +6,7 @@
 /vendor/
 
 # Logs
-/storage/logs/*
+
 *.log
 
 # Cache

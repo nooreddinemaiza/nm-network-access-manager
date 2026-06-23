@@ -17,6 +17,7 @@ use App\Controllers\AdminController;
 use Core\Exception\ConnectionException;
 use Core\Exception\ValidationException;
 use Core\Exception\ConfigurationException;
+use Core\File;
 
 class Configuration
 {
@@ -138,6 +139,12 @@ class Configuration
         return $this->view('installation.php', 0);
     }
 
+    public function setEnvironment()
+    {
+        File::createEmpty('config','.env');
+        File::createDirectory('storage', 'Logs');
+        File::createEmpty('log','app.log');        
+    }
     /**
      * Valide la lecture de la présentation (POST)
      */

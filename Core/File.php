@@ -17,6 +17,7 @@ class File
     private static array $cache = [];
 
     private const PATHS = [
+        'storage' => '/Storage/',
         'log' => '/Storage/Logs/',
         'file' => '/Storage/Files/',
         'archive' => '/Storage/archives/',
@@ -638,5 +639,243 @@ class File
 
         $items = scandir($path);
         return count($items) <= 2; // . et ..
+    }
+    /**
+     * Écrit du contenu dans un fichier en utilisant des flux pour éviter les problèmes de mémoire
+     * 
+     * @param string $type Type de chemin
+     * @param string $name Nom du fichier
+     * @param string|resource|null $content Contenu à écrire ou ressource de flux
+     * @param bool $append Mode d'append
+     * @param int $chunkSize Taille des chunks en octets (par défaut 8192)
+     * @return bool Succès de l'opération
+     * @throws RuntimeException En cas d'erreur
+     */
+    public static function writeStream(string $type, string $name, $content = null, bool $append = false, int $chunkSize = 8192): bool
+    {
+        $path = self::getPath($type, $name);
+        self::ensureDirectory(dirname($path));
+
+        $flags = $append ? 'ab' : 'wb';
+        $handle = @fopen($path, $flags);
+
+        if ($handle === false) {
+            Logger::error("Impossible d'ouvrir le fichier en écriture : {$path}");
+            throw new RuntimeException("Impossible d'écrire dans le fichier : {$name}");
+        }
+
+        try {
+            // Si le contenu est une ressource (flux), on la lit directement
+            if (is_resource($content)) {
+                $meta = stream_get_meta_data($content);
+                if ($meta['seekable']) {
+                    rewind($content);
+                }
+
+                while (!feof($content)) {
+                    $chunk = fread($content, $chunkSize);
+                    if ($chunk === false) {
+                        throw new RuntimeException("Erreur lors de la lecture du flux source");
+                    }
+                    if (fwrite($handle, $chunk) === false) {
+                        throw new RuntimeException("Erreur lors de l'écriture du fichier");
+                    }
+                }
+            }
+            // Si le contenu est une chaîne, on l'écrit par chunks si elle est grande
+            elseif (is_string($content)) {
+                $length = strlen($content);
+                if ($length > $chunkSize) {
+                    // Écriture par chunks pour les gros contenus
+                    for ($offset = 0; $offset < $length; $offset += $chunkSize) {
+                        $chunk = substr($content, $offset, $chunkSize);
+                        if (fwrite($handle, $chunk) === false) {
+                            throw new RuntimeException("Erreur lors de l'écriture du fichier");
+                        }
+                    }
+                } else {
+                    // Pour les petits contenus, écriture directe
+                    if (fwrite($handle, $content) === false) {
+                        throw new RuntimeException("Erreur lors de l'écriture du fichier");
+                    }
+                }
+            }
+            // Si le contenu est null, on crée un fichier vide
+            elseif ($content === null) {
+                // Rien à écrire, le fichier est créé mais vide
+            } else {
+                throw new \InvalidArgumentException("Le contenu doit être une chaîne, une ressource ou null");
+            }
+
+            // Vider le cache pour ce fichier
+            self::clearCache($type, $name);
+
+            Logger::info("Fichier écrit avec succès (stream) : {$name}");
+            return true;
+        } catch (\Exception $e) {
+            Logger::error("Échec d'écriture stream : {$path} - {$e->getMessage()}");
+            throw $e;
+        } finally {
+            if (is_resource($handle)) {
+                fclose($handle);
+            }
+        }
+    }
+
+    /**
+     * Crée un fichier vide
+     * 
+     * @param string $type Type de chemin
+     * @param string $name Nom du fichier
+     * @return bool Succès de l'opération
+     */
+    public static function createEmpty(string $type, string $name): bool
+    {
+        try {
+            return self::writeStream($type, $name, null);
+        } catch (\Exception $e) {
+            Logger::error("Échec de création du fichier vide : {$name} - {$e->getMessage()}");
+            return false;
+        }
+    }
+
+    /**
+     * Copie un fichier en utilisant des flux (optimisé pour la mémoire)
+     * 
+     * @param string $sourceType Type de la source
+     * @param string $sourceName Nom de la source
+     * @param string $destType Type de la destination
+     * @param string $destName Nom de la destination
+     * @param int $chunkSize Taille des chunks en octets
+     * @return bool Succès de l'opération
+     */
+    public static function copyStream(string $sourceType, string $sourceName, string $destType, string $destName, int $chunkSize = 8192): bool
+    {
+        $sourcePath = self::getPath($sourceType, $sourceName);
+        $destPath = self::getPath($destType, $destName);
+
+        if (!is_readable($sourcePath)) {
+            Logger::error("Fichier source non lisible : {$sourcePath}");
+            throw new RuntimeException("Fichier source non lisible : {$sourceName}");
+        }
+
+        self::ensureDirectory(dirname($destPath));
+
+        $sourceHandle = @fopen($sourcePath, 'rb');
+        if ($sourceHandle === false) {
+            throw new RuntimeException("Impossible d'ouvrir le fichier source : {$sourceName}");
+        }
+
+        $destHandle = @fopen($destPath, 'wb');
+        if ($destHandle === false) {
+            fclose($sourceHandle);
+            throw new RuntimeException("Impossible de créer le fichier destination : {$destName}");
+        }
+
+        try {
+            while (!feof($sourceHandle)) {
+                $chunk = fread($sourceHandle, $chunkSize);
+                if ($chunk === false) {
+                    throw new RuntimeException("Erreur lors de la lecture du fichier source");
+                }
+                if (fwrite($destHandle, $chunk) === false) {
+                    throw new RuntimeException("Erreur lors de l'écriture du fichier destination");
+                }
+            }
+
+            Logger::info("Fichier copié avec flux : {$sourceName} -> {$destName}");
+            return true;
+        } catch (\Exception $e) {
+            Logger::error("Échec de copie stream : {$sourcePath} -> {$destPath} - {$e->getMessage()}");
+            throw $e;
+        } finally {
+            if (is_resource($sourceHandle)) {
+                fclose($sourceHandle);
+            }
+            if (is_resource($destHandle)) {
+                fclose($destHandle);
+            }
+        }
+    }
+
+    /**
+     * Ajoute une ligne à un fichier de manière efficace (optimisé mémoire)
+     */
+    public static function appendLine(string $type, string $name, string $line): bool
+    {
+        $path = self::getPath($type, $name);
+        self::ensureDirectory(dirname($path));
+
+        // Vérifier si la ligne existe déjà (optionnel)
+        if (file_exists($path)) {
+            $lines = file($path, FILE_IGNORE_NEW_LINES);
+            if (in_array($line, $lines, true)) {
+                Logger::info("Ligne déjà présente dans le fichier : {$name}");
+                return false;
+            }
+        }
+
+        // Utilisation de writeStream pour écrire la ligne
+        $content = $line . PHP_EOL;
+        return self::writeStream($type, $name, $content, true);
+    }
+
+    /**
+     * Ajoute un tableau de données en JSON à un fichier de manière efficace
+     */
+    public static function writeJsonStream(string $type, string $name, array $data, bool $append = false): bool
+    {
+        try {
+            $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            if ($json === false) {
+                throw new RuntimeException("Erreur d'encodage JSON");
+            }
+            return self::writeStream($type, $name, $json, $append);
+        } catch (\Exception $e) {
+            Logger::error("Échec d'écriture JSON stream : {$name} - {$e->getMessage()}");
+            throw $e;
+        }
+    }
+
+    /**
+     * Lit un fichier par chunks pour éviter les problèmes de mémoire
+     * 
+     * @param string $type Type de chemin
+     * @param string $name Nom du fichier
+     * @param callable $callback Fonction appelée pour chaque chunk
+     * @param int $chunkSize Taille des chunks en octets
+     * @return bool Succès de l'opération
+     */
+    public static function readStream(string $type, string $name, callable $callback, int $chunkSize = 8192): bool
+    {
+        $path = self::getPath($type, $name);
+
+        if (!is_readable($path)) {
+            Logger::error("Fichier non lisible : {$path}");
+            throw new RuntimeException("Impossible de lire le fichier : {$name}");
+        }
+
+        $handle = @fopen($path, 'rb');
+        if ($handle === false) {
+            throw new RuntimeException("Impossible d'ouvrir le fichier : {$name}");
+        }
+
+        try {
+            while (!feof($handle)) {
+                $chunk = fread($handle, $chunkSize);
+                if ($chunk === false) {
+                    throw new RuntimeException("Erreur lors de la lecture du fichier");
+                }
+                $callback($chunk);
+            }
+            return true;
+        } catch (\Exception $e) {
+            Logger::error("Erreur lors de la lecture stream : {$path} - {$e->getMessage()}");
+            throw $e;
+        } finally {
+            if (is_resource($handle)) {
+                fclose($handle);
+            }
+        }
     }
 }
