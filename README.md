@@ -121,7 +121,7 @@ Le script envoie des requêtes HTTP pour déclencher les workers :
 ```bash
 API_URL="http://192.168.0.20/cron/update-log"
 ````
-
+Il faut modifier l'adresse dans le script avant de l'ajouter à votre système
 ---
 
 ## 🔁 Traitement des logs (Job Workers)
