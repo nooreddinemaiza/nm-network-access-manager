@@ -41,3 +41,4 @@ build/
 *.pem
 *.key
 *.crt
+secret.php
