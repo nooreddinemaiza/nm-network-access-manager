@@ -1,4 +1,3 @@
-```md
 # FreeRADIUS Captive Portal Management Platform
 
 Plateforme web de gestion centralisée des utilisateurs d’un portail captif basée sur FreeRADIUS, développée en PHP orienté objet.
