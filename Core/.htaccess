@@ -1,0 +1,9 @@
+# ===================================
+# 5. FICHIER .htaccess CORE (core/.htaccess)
+# ===================================
+
+# Bloquer tout accès au dossier core
+Require all denied
+
+# Message d'erreur personnalisé
+ErrorDocument 403 /403

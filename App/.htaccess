@@ -1,0 +1,14 @@
+# ===================================
+# 7. FICHIER .htaccess APP (app/.htaccess)
+# ===================================
+
+# Bloquer tout accès direct au dossier app
+Require all denied
+
+# Autoriser uniquement l'inclusion interne
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ - [F]
+</IfModule>
+
+ErrorDocument 403 /403

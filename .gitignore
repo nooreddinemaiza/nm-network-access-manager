@@ -1,0 +1,43 @@
+# Environment
+.env
+.env.*
+
+# Composer
+/vendor/
+
+# Logs
+/storage/logs/*
+*.log
+
+# Cache
+/storage/cache/*
+/bootstrap/cache/*
+
+# Sessions
+/storage/sessions/*
+
+# Uploads
+/public/uploads/*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# Build
+dist/
+build/
+
+# Vite
+/public/build/
+
+# Secrets
+*.pem
+*.key
+*.crt
