@@ -171,7 +171,7 @@ Paramètres :
 
 * Chiffrement complet des mots de passe
 * Protection des credentials administrateur et utilisateurs
-* Compatibilité CHAP pour FreeRADIUS
+* Compatibilité PAP pour FreeRADIUS
 * Synchronisation avec pfSense
 
 ---
