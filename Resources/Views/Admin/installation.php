@@ -510,11 +510,11 @@ $view->section('content');
 
                                 <div style="background:#0d1117;border:1px solid #21262d;border-radius:.6rem;padding:.9rem 1rem;">
                                     <p style="margin:0 0 .4rem;font-size:.85rem;font-weight:600;color:#93c5fd;">
-                                        3. Activer CHAP pour le déchiffrement des mots de passe
+                                        3. Activer PAP pour le déchiffrement des mots de passe dans <span class="ci">Pfsense</span>
                                     </p>
                                     <p style="margin:0;font-size:.8rem;color:#8b949e;line-height:1.6;">
                                         La plateforme chiffre tous les mots de passe. FreeRADIUS et pfSense doivent
-                                        utiliser <strong style="color:#e6edf3;">CHAP</strong> pour les déchiffrer correctement.
+                                        utiliser <strong style="color:#e6edf3;">PAP</strong> pour les déchiffrer correctement.
                                     </p>
                                 </div>
                             </div>
