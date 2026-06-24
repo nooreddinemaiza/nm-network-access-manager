@@ -52,7 +52,7 @@ Clonez ce dépôt directement dans le répertoire racine de votre serveur web :
 
 ```bash
 cd /var/www/
-git clone https://github.com/nooreddinemaiza/freeradius-dashboard.git
+git clone https://github.com/votre-utilisateur/freeradius-dashboard.git
 ```
 
 > Vous pouvez renommer le dossier cloné selon vos préférences ou conserver le nom `freeradius-dashboard`.
@@ -161,37 +161,76 @@ Le serveur web (Apache) doit avoir les droits sur :
 
 ## 📡 Intégration DNS / pfSense (statistiques des sites visités)
 
-La plateforme exploite les logs DNS envoyés par pfSense ou un serveur DNS vers le serveur web.
+La plateforme exploite les logs de résolution DNS pour générer des statistiques sur les sites visités par les utilisateurs du portail captif.
 
-### Scripts utilisés :
+### Prérequis
 
-- `dns_extractor.sh`
-  → extrait les logs DNS du système Linux et les classe par date
+Vous avez besoin de l'un des deux éléments suivants :
+- **pfSense** configuré en tant que serveur DNS (via le résolveur DNS intégré)
+- **Un serveur DNS local** dédié (Unbound, BIND, dnsmasq, etc.)
 
-- `dns-daily-sync.sh`
-  → traitement quotidien automatique des logs
+Dans tous les cas, votre serveur DNS doit être configuré pour **envoyer ses logs de résolution vers le serveur web** (via syslog ou toute autre méthode de transfert de logs).
 
-### Fichier central :
+---
+
+### Scripts utilisés
+
+Les scripts suivants se trouvent dans le dossier `/Storage/Files/` du projet.
+
+> ⚠️ **Important :** Copiez ces scripts vers un emplacement sécurisé sur votre système (par exemple `/usr/local/bin/` ou `/opt/scripts/`) et supprimez les originaux du dossier `/Storage/Files/` une fois en place.
+
+```bash
+sudo cp /var/www/freeradius-dashboard/Storage/Files/dns_extractor.sh /usr/local/bin/
+sudo cp /var/www/freeradius-dashboard/Storage/Files/dns-daily-sync.sh /usr/local/bin/
+sudo chmod +x /usr/local/bin/dns_extractor.sh
+sudo chmod +x /usr/local/bin/dns-daily-sync.sh
+```
+
+- **`dns_extractor.sh`**
+  → Extrait les logs DNS du système Linux, les traite et les archive par date.
+
+- **`dns-daily-sync.sh`**
+  → Déclenche la synchronisation quotidienne des logs vers la base de données analytique.
+
+---
+
+### Configuration des tâches planifiées (cron)
+
+Ajoutez les deux tâches suivantes à votre crontab (`sudo crontab -e`) :
+
+```cron
+# Extraction des logs DNS — toutes les heures (ou selon votre charge réseau)
+0 * * * * /usr/local/bin/dns_extractor.sh
+
+# Synchronisation quotidienne — à 01h20 (20 minutes après l'extracteur)
+20 1 * * * /usr/local/bin/dns-daily-sync.sh
+```
+
+> 💡 **Conseil sur le timing :** Prévoyez un délai raisonnable entre l'exécution de `dns_extractor.sh` et `dns-daily-sync.sh` — au minimum **20 minutes**. Ce délai peut être réduit si votre réseau a peu de clients (et donc peu de résolutions DNS à traiter).
+
+---
+
+### Fichier central
 
 ```
 pfsense_dns_today.log
 ```
 
 Ce fichier doit être :
-- généré quotidiennement
-- accessible par l'utilisateur Apache
+- généré et mis à jour quotidiennement par `dns_extractor.sh`
+- accessible en lecture par l'utilisateur Apache (`www-data` ou `apache`)
 
 ---
 
 ### API de traitement des logs
 
-Le script envoie des requêtes HTTP pour déclencher les workers :
+Le script `dns-daily-sync.sh` envoie des requêtes HTTP pour déclencher les workers de traitement :
 
 ```bash
 API_URL="http://192.168.0.20/cron/update-log"
 ```
 
-Il faut modifier l'adresse dans le script avant de l'ajouter à votre système.
+⚠️ Modifiez cette adresse IP dans le script pour qu'elle corresponde à votre serveur web avant de l'activer.
 
 ---
 
