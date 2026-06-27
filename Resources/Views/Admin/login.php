@@ -2,8 +2,9 @@
 $view->layout('layouts', 'main.php');
 $view->section("content")
 ?>
-<div class="flex items-center justify-center min-h-screen bg-gray-900">
-    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8" x-data="{
+<div class="flex mt-6 mb-6 pt-4 pb-6 items-center justify-center dark:bg-gray-900">
+
+    <div class="w-full max-w-md border border-blue-500 shadow-blue-300 dark:border-blue-950 dark:shadow-blue-950 rounded-lg shadow-lg p-8" x-data="{
         <?= $view->e($type_name ?? 'email') ?>: '<?= $view->e($old[$type_name ?? 'email'] ?? '') ?>',
         type:'<?= $view->e($type ?? 'email') ?>',
         password: '',
@@ -25,7 +26,10 @@ $view->section("content")
             return this.emailValid && this.passwordValid;
         }
         }">
-        <h1 class="text-2xl font-bold text-center text-gray-900 mb-6">
+        <div style="display: block;max-width: 75px;margin: 0 auto;">
+            <?= $logo_url ?>
+        </div>
+        <h1 class="text-2xl font-bold text-center mb-6">
             <?= $view->e($title ?? 'Connexion Administrateur') ?>
         </h1>
 
@@ -86,7 +90,7 @@ $view->section("content")
 
                 <!-- Champ Email -->
                 <div class="mb-4">
-                    <label for="email" class="block text-gray-700 font-medium mb-2">
+                    <label for="email" class="block  text-gray-900 dark:text-white font-medium mb-2">
                         <?= $view->e($type_label ?? 'Adresse e-mail') ?>
                         <span class="text-red-500">*</span>
                     </label>
@@ -142,7 +146,7 @@ $view->section("content")
 
                 <!-- Champ Mot de passe -->
                 <div class="mb-4">
-                    <label for="password" class="block text-gray-700 font-medium mb-2">
+                    <label for="password" class="block  text-gray-900 dark:text-white font-medium mb-2">
                         Mot de passe
                         <span class="text-red-500">*</span>
                     </label>
@@ -231,7 +235,7 @@ $view->section("content")
             </form>
 
             <!-- Message d'aide -->
-            <div class="mt-6 text-center text-sm text-gray-600">
+            <div class="mt-6 text-center text-sm  text-gray-600 dark:text-white ">
                 <p>Première connexion ? Contactez l'administrateur système.</p>
             </div>
         <?php endif; ?>

@@ -179,6 +179,7 @@ class Configuration
             $migration = new Migration();
             $preview   = $migration->getSchemaPreview();
             $this->data['preview'] = $preview;
+            $this->data['has_footer'] = true;
         } catch (\Exception $e) {
             $this->data['errors']['checking'] = [
                 'Erreur preview: ' . $e->getMessage(),
@@ -435,8 +436,7 @@ class Configuration
             'total_steps' => 2,
             'message'     => $this->data['message'] ?? "",
             'has_header'  => false,
-            'has_footer'  => false,
-            'has_nav'     => false,
+            'has_footer'  => true,
             'errors'      => $this->data['errors'] ?? [],
             'csrf_token'  => $this->data['csrf_token'] ?? CSRF::generateToken(),
             'data'        => $this->data,

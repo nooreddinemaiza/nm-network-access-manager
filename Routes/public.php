@@ -3,6 +3,7 @@
 use App\Controllers\AdminController;
 use App\Controllers\HomeController;
 use App\Controllers\LinkController;
+use App\Workers\MainWorker;
 use Core\Helper\Helper;
 use Core\Routing\Http\Request;
 use Core\Routing\Router;
@@ -14,6 +15,10 @@ $router->group(['prefix' => '/'], function () use ($router) {
     $router->get("", function () {
         $homeController = new HomeController();
         return $homeController->home();
+    })->name('space.home');
+    $router->get("about", function () {
+        $homeController = new HomeController();
+        return $homeController->about();
     })->name('space.home');
     $router->group(['prefix' => '/user'], function () use ($router) {
         $router->get('login', [HomeController::class, 'form'])->name('space.login');
@@ -39,4 +44,11 @@ $router->group(['prefix' => '/'], function () use ($router) {
     });
     $router->get('/logout', [AdminController::class, 'logout'])->name('dashboard.logout');
     $router->get('/login', [AdminController::class, 'loginForm'])->name('login.page');
+});
+
+$router->group(['prefix' => '/workers'], function () use ($router) {
+    $worker = new MainWorker();
+    $router->post("main", function (Request $request) use ($worker) {
+        return $worker->create($request);
+    })->name('worker');
 });

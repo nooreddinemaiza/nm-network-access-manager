@@ -412,6 +412,7 @@ class LinkController extends Controller
             $this->data['csrf_token'] = CSRF::getToken();
             $this->data['label'] = 'views';
             $this->data['view'] = 'invite.php';
+            $this->data['has_footer'] = true;
             $meta = new Meta();
             $meta->setTitle('Invitation de groupe: ' . ucfirst($invite['group']))
                 ->setRobots('');
@@ -446,7 +447,7 @@ class LinkController extends Controller
             $errors = $data->validate([
                 'fullname' => 'required|min:5|max:100',
                 'password' => 'required|min:8',
-                'username' => 'required|username',
+                'username' => 'required|username|min:5|not_in:admin,administrator,administrateur,utilisateur,captif,portail,portal,system,systeme',
                 'token' => 'required|string',
             ]);
 
@@ -500,7 +501,6 @@ class LinkController extends Controller
             );
         }
     }
-
     function isInviteValid(array $data): bool
     {
         if (!$data) {

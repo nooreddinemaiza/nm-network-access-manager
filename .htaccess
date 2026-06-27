@@ -1,0 +1,17 @@
+# Activer la réécriture des URL
+RewriteEngine On
+
+# Rediriger toutes les requêtes vers le dossier public (point d'entrée)
+RewriteCond %{REQUEST_URI} !^/Public/
+#RewriteRule ^(.*)$ Public/$1 [L]
+
+# Protéger les fichiers sensibles
+<FilesMatch "\.(htaccess|env|ini|log|conf|bak)$">
+    Require all denied
+</FilesMatch>
+
+# Cacher l'extension .php dans les URL
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-zA-Z0-9_-]+)$ /$1.php [L]
+

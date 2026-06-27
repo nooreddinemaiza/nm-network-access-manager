@@ -3,9 +3,12 @@
     <div class="flex shrink-0 items-center px-3 mb-8">
         <div class="flex items-center space-x-3 w-full">
             <h1 class="text-2xl font-boldbg-clip-text text-transparent">
-                <a href="/dashboard" target="" class=" text-black dark:text-white " @click.stop>
-                    Dashboard
-                </a>
+                <div class="logo-container">
+                    <span class="logo-img"><?= $logo_url ?></span>
+                    <a href="/dashboard" target="" class=" text-black dark:text-white " @click.stop>
+                        Dashboard
+                    </a>
+                </div>
             </h1>
         </div>
     </div>

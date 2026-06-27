@@ -179,22 +179,9 @@ $view->section('content');
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between ">
 
         <!-- Logo -->
-        <a href="#" class="flex items-center gap-2 group">
-            <div class="w-8 h-8 bg-moss dark:bg-gold rounded-full flex items-center justify-center
-                        transition-all duration-300 group-hover:scale-110">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <path d="M1.5 8.5C5.5 4.5 10.5 2.5 12 2.5s6.5 2 10.5 6" stroke="white" stroke-width="2" stroke-linecap="round" />
-                    <path d="M4.5 12C7.5 9 10 8 12 8s4.5 1 7.5 4" stroke="white" stroke-width="2" stroke-linecap="round" />
-                    <path d="M7.5 15.5C9.5 13.5 10.8 13 12 13s2.5.5 4.5 2.5" stroke="white" stroke-width="2" stroke-linecap="round" />
-                    <circle cx="12" cy="19" r="1.5" fill="white" />
-                </svg>
-            </div>
-            <?php if ($app_name): ?>
-                <span class="font-display font-bold text-lg tracking-tight text-ink dark:text-cream">
-                    <?= $app_name ?>
-                </span>
-            <?php endif; ?>
-        </a>
+        <div class="w-8 h-8 bg-moss dark:bg-gold rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+            <?= $logo_url ?>
+        </div>
 
         <!-- Desktop Nav -->
         <nav class="hidden md:flex items-center gap-8">
@@ -202,19 +189,12 @@ $view->section('content');
                                hover:text-ink dark:hover:text-cream transition-colors">Accueil</a>
             <a href="#fonctionnement" class="nav-link text-sm font-medium text-ink/80 dark:text-cream/80
                                hover:text-ink dark:hover:text-cream transition-colors">Comment ça marche</a>
-            <a href=" #apropos" class="nav-link text-sm font-medium text-ink/80 dark:text-cream/80
+            <a href="/about" class="nav-link text-sm font-medium text-ink/80 dark:text-cream/80
                                hover:text-ink dark:hover:text-cream transition-colors">À propos</a>
         </nav>
 
         <!-- Right controls -->
         <div class="flex items-center gap-3">
-            <!-- Dark mode toggle -->
-            <?= $view->inc('components', 'sombre.php', [
-                'class' => 'relative w-12 h-6 rounded-full bg-ink/20 dark:bg-cream/20
-                            hover:bg-ink/30 dark:hover:bg-cream/30 transition-colors duration-300
-                            focus:outline-none focus:ring-2 focus:ring-moss dark:focus:ring-gold'
-            ]); ?>
-
             <!-- CTA -->
             <a href="/user/login" class="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-full
                             bg-moss dark:bg-gold text-cream dark:text-ink text-sm font-medium
@@ -324,21 +304,9 @@ $view->section('content');
                 </a>
             </div>
 
-            <!-- Icône WiFi pulsante -->
             <div class="fade-up d5 flex justify-center">
-                <div class="relative w-20 h-20 flex items-center justify-center">
-                    <div class="signal-ring w-10 h-10 border-moss/40 dark:border-gold/40"></div>
-                    <div class="signal-ring w-10 h-10 border-moss/30 dark:border-gold/30"></div>
-                    <div class="signal-ring w-10 h-10 border-moss/20 dark:border-gold/20"></div>
-                    <div class="relative z-10 w-14 h-14 rounded-full bg-moss dark:bg-gold
-                            flex items-center justify-center shadow-lg shadow-moss/30 dark:shadow-gold/30">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M1.5 8.5C5.5 4.5 10.5 2.5 12 2.5s6.5 2 10.5 6" stroke="white" stroke-width="2" stroke-linecap="round" />
-                            <path d="M4.5 12C7.5 9 10 8 12 8s4.5 1 7.5 4" stroke="white" stroke-width="2" stroke-linecap="round" />
-                            <path d="M7.5 15.5C9.5 13.5 10.8 13 12 13s2.5.5 4.5 2.5" stroke="white" stroke-width="2" stroke-linecap="round" />
-                            <circle cx="12" cy="19" r="1.5" fill="white" />
-                        </svg>
-                    </div>
+                <div class="relative w-52 h-52 flex items-center justify-center">
+                    <?= $logo_url ?>
                 </div>
             </div>
         </div>
@@ -451,39 +419,13 @@ $view->section('content');
 <!-- ═══════════════════ FOOTER ═══════════════════ -->
 <footer class="bg-cream dark:bg-ink border-t border-ink/10 dark:border-cream/10 transition-colors duration-500">
     <div class="max-w-6xl mx-auto px-6 py-16">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
-
-            <!-- Brand -->
-            <div class="col-span-2 md:col-span-1">
-                <div class="flex items-center gap-2 mb-4">
-                    <div class="w-7 h-7 bg-moss dark:bg-gold rounded-full flex items-center justify-center">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                            <path d="M4.5 12C7.5 9 10 8 12 8s4.5 1 7.5 4" stroke="white" stroke-width="2.5" stroke-linecap="round" />
-                            <path d="M7.5 15.5C9.5 13.5 10.8 13 12 13s2.5.5 4.5 2.5" stroke="white" stroke-width="2.5" stroke-linecap="round" />
-                            <circle cx="12" cy="19" r="1.5" fill="white" />
-                        </svg>
-                    </div>
-                    <?php if ($app_name): ?>
-                        <span class="font-display font-bold text-ink dark:text-cream">
-                            <?= $app_name ?>
-                        </span>
-                    <?php endif; ?>
-                </div>
-                <p class="text-sm text-ink/55 dark:text-cream/55 leading-relaxed max-w-xs">
-                    Solution de portail captif moderne, sécurisée et facile à déployer.
-                </p>
-            </div>
-
-        </div>
-
         <!-- Bottom bar -->
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4
                     pt-8 border-t border-ink/10 dark:border-cream/10">
             <p class="text-xs text-ink/40 dark:text-cream/40">
-                © <?= date('Y') ?>
-                <?php if ($app_name): ?>
+                <?php if ($name): ?>
                     <span class="font-display font-bold text-ink dark:text-cream">
-                        <?= $app_name . ". " ?>
+                        <?= $name . ". " ?>
                     </span>
                 <?php endif; ?> Tous droits réservés.
             </p>

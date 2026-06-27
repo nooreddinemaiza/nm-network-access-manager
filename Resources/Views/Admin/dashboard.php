@@ -137,7 +137,7 @@ $view->section("content")
     <div class="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
         <div class="flex min-h-0 flex-1 flex-col bg-white dark:bg-gray-800 shadow-lg">
             <!-- Logo -->
-            <div class="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
+            <div class="flex flex-1 flex-col overflow-y-auto pb-4">
                 <?= $view->inc('components', 'admin/navbar.php', []); ?>
             </div>
         </div>

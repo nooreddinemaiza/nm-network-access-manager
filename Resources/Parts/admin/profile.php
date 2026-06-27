@@ -22,7 +22,7 @@
                 <!-- Sidebar -->
                 <div class="bg-gray-50 dark:bg-gray-800 p-6 w-full md:w-1/3 text-center">
                     <div class="relative w-24 h-24 mx-auto mb-3">
-                        <img :src="'/Assets/images/profile/user-default.png'" alt="Avatar" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg">
+                        <img :src="'/Assets/images/user-default.png'" alt="Avatar" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg">
                     </div>
                     <h3 class="font-bold text-lg mb-2" x-text="userData?.fullname"></h3>
 

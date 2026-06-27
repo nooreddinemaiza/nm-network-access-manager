@@ -6,9 +6,10 @@ namespace Core\Helper;
 
 use Core\File;
 use Core\Logger;
-use RuntimeException;
+use Core\Routing\Http\Request;
 use Core\Routing\Http\Response;
 use Core\Routing\RouteException;
+use RuntimeException;
 
 /**
  * Gestionnaire d'assets avec encodage optimisé et service sécurisé
@@ -142,6 +143,24 @@ class AssetManager
         }
     }
 
+    public static function serveAdmin(Request $request, string $label, string $filename)
+    {
+        $filename = basename($filename);
+        $label = "admin" . ucfirst(strtolower($label));
+        $accepted = ["adminStyles", "adminScripts"];
+        if (!in_array($label, $accepted)) {
+            return RouteException::handleAssetNotFound();
+        }
+        $version = $request->query('v');
+        if ($version) {
+            $info = AssetManager::getInfo($label, $filename);
+            if (!empty($info) && $info['modified'] != $version) {
+                $newUrl = AssetManager::url($label, $filename, true);
+                return Response::redirect($newUrl, 301);
+            }
+        }
+        return self::serve($label, $filename);
+    }
     /**
      * Valide la requête d'asset
      */

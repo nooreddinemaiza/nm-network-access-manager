@@ -224,7 +224,7 @@ function profileManager() {
         showConfirmPassword: false,
 
         userData: {
-            image_path: '/Assets/images/profile/user-default.png'
+            image_path: '/Assets/images/user-default.png'
         },
 
         editForm: {

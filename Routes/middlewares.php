@@ -10,9 +10,14 @@ use Core\Routing\Router;
  * @var Router $router
  */
 $router->middleware('auth', function (Request $request, Closure $next) {
-    // Vérifier si l'utilisateur est déjà connecté
     if (!Session::isAuthenticated()) {
         return Response::redirect('/login', 302);
+    }
+    return $next($request);
+});
+$router->middleware('admin_asset', function (Request $request, Closure $next) {
+    if (!Session::isAuthenticated()) {
+        return RouteException::handleForbidden($request);
     }
     return $next($request);
 });

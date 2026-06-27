@@ -54,7 +54,7 @@ $user = $user ?? [
     'unique_devices'           => 3,
     'current_session_duration' => 52738,
     'current_mac'              => 'ee:26:6a:49:87:af',
-    'current_ip'               => $client_ip ?? '192.168.0.195',
+    'current_ip'               => $client_ip ?? '',
     'is_online'                => 1,
     'active_sessions'          => 1,
     'last_login_at'            => '2026-05-19 10:40:45',
@@ -472,21 +472,11 @@ $view->section('styles');
             <div style="max-width:1280px;margin:0 auto;padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
 
                 <!-- Logo -->
-                <a href="/" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
-                    <div style="width:28px;height:28px;background:var(--c-accent);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                            <path d="M1.5 8.5C5.5 4.5 10.5 2.5 12 2.5s6.5 2 10.5 6" stroke="white" stroke-width="2.2" stroke-linecap="round" />
-                            <path d="M4.5 12C7.5 9 10 8 12 8s4.5 1 7.5 4" stroke="white" stroke-width="2.2" stroke-linecap="round" />
-                            <path d="M7.5 15.5C9.5 13.5 10.8 13 12 13s2.5.5 4.5 2.5" stroke="white" stroke-width="2.2" stroke-linecap="round" />
-                            <circle cx="12" cy="19" r="1.5" fill="white" />
-                        </svg>
+                <div style="display: block;max-width: 45px;">
+                    <div>
+                        <?= $logo_url ?>
                     </div>
-                    <?php if ($app_name): ?>
-                        <span style="font-family:'Fraunces',serif;font-weight:700;font-size:1rem;color:var(--c-bright);letter-spacing:-.01em;"><?= $app_name ?></span>
-                    <?php endif; ?>
-
-                    <span style="font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--c-muted);padding:1px 6px;border:1px solid var(--c-border2);border-radius:2px;">PORTAL</span>
-                </a>
+                </div>
 
                 <!-- Nav -->
                 <nav style="display:flex;align-items:center;gap:4px;">
@@ -820,39 +810,37 @@ $view->section('styles');
 
 
         </div><!-- /wrap -->
-    </div><!-- /dash-root -->
+    </div>
+</div>
 
 
-    <!-- ═══════════ TIMER JS ═══════════ -->
-    <?php if ($is_online): ?>
-        <script>
-            (function() {
-                let s = <?= (int)$user['current_session_duration'] ?>;
-                const els = document.querySelectorAll('#live-timer,#live-timer-2');
+<?php if ($is_online): ?>
+    <script>
+        (function() {
+            let s = <?= (int)$user['current_session_duration'] ?>;
+            const els = document.querySelectorAll('#live-timer,#live-timer-2');
 
-                function fmt(n) {
-                    const h = Math.floor(n / 3600),
-                        m = Math.floor((n % 3600) / 60),
-                        r = n % 60;
-                    return h > 0 ? `${h}h ${String(m).padStart(2,'0')}m` : `${m}m ${String(r).padStart(2,'0')}s`;
-                }
-                setInterval(() => {
-                    s++;
-                    els.forEach(e => {
-                        if (e) e.textContent = fmt(s);
-                    });
-                }, 1000);
-            })();
-        </script>
-    <?php endif; ?>
+            function fmt(n) {
+                const h = Math.floor(n / 3600),
+                    m = Math.floor((n % 3600) / 60),
+                    r = n % 60;
+                return h > 0 ? `${h}h ${String(m).padStart(2,'0')}m` : `${m}m ${String(r).padStart(2,'0')}s`;
+            }
+            setInterval(() => {
+                s++;
+                els.forEach(e => {
+                    if (e) e.textContent = fmt(s);
+                });
+            }, 1000);
+        })();
+    </script>
+<?php endif;
+$view->endSection();
 
-    <?php
-    $view->endSection();
+$view->section('footer');
+$view->inc('partials', 'footer.php');
+$view->endSection();
 
-    $view->section('footer');
-    $view->inc('partials', 'footer.php');
-    $view->endSection();
-
-    $view->section('scripts');
-    echo AssetHelper::scripts(['scripts:main.js']);
-    $view->endSection();
+$view->section('scripts');
+echo AssetHelper::scripts(['scripts:main.js']);
+$view->endSection();

@@ -1,7 +1,9 @@
 <?php
 
 use App\Workers\MainWorker;
+use Core\File;
 use Core\Helper\AssetManager;
+use Core\Logger;
 use Core\Routing\Http\Request;
 use Core\Routing\Http\Response;
 use Core\Routing\Router;
@@ -10,7 +12,14 @@ use Core\Routing\Router;
  * @var Router $router
  */
 $router->group(['prefix' => '/Assets'], function () use ($router) {
+    $router->get('{label}/admin/{filename}', function (Request $request, string $label, string $filename) {
+        return AssetManager::serveAdmin($request, $label, $filename);
+    })->middleware('admin_asset');
     $router->get('{label}/{filename}', function (Request $request, string $label, string $filename) {
+        
+            Logger::debug("AssetManager::serve() label={$label} file={$filename}");
+            Logger::debug("File exists: " . (File::exists($label, $filename) ? 'yes' : 'no'));
+            Logger::debug("File path: " . File::getPath($label, $filename));
         $filename = basename($filename);
         $version = $request->query('v');
         if ($version) {
@@ -22,18 +31,10 @@ $router->group(['prefix' => '/Assets'], function () use ($router) {
         }
         return AssetManager::serve($label, $filename);
     });
-    $router->get('{label}/admin/{filename}', function (Request $request, string $label, string $filename) {
-        $filename = basename($filename);
-        return AssetManager::serve($label, "admin/$filename");
-    })->middleware('auth');
+
     $router->get('/download/{label}/{filename}', function (Request $request, string $label, string $filename) {
         $filename = basename($filename);
         return AssetManager::download($label, "$filename");
-    });
+    })->middleware('auth');
 });
-$router->group(['prefix' => '/workers'], function () use ($router) {
-    $worker = new MainWorker();
-    $router->post("main", function (Request $request) use ($worker) {
-        return $worker->create($request);
-    })->name('worker');
-});
+

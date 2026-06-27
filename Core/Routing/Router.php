@@ -9,6 +9,8 @@ use Core\Routing\Route;
 use Core\Routing\Http\Request;
 use Core\Routing\Http\Response;
 use Core\Routing\RouteException;
+use Core\System\Config;
+use Core\ViewEngine\View;
 
 class Router
 {
@@ -53,6 +55,7 @@ class Router
 
     public function get(string $uri, mixed $action): Route
     {
+        View::share(Config::get('app'));
         return $this->addRoute(['GET'], $uri, $action);
     }
 

@@ -638,6 +638,7 @@ class AdminController extends Controller
         $this->data['meta'] = $meta;
         $this->data['csrf_token'] = CSRF::getToken();
         $this->data['isBlocked'] = false;
+        $this->data['has_footer'] = true;
         return $this->view();
     }
     public function dashboard()

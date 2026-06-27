@@ -4,14 +4,6 @@
 # ===================================
 RewriteEngine On
 
-# Empêcher les boucles
-RewriteBase /
-
-# Si le fichier ou dossier existe, Apache le sert
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
-
 # Tout le reste vers le front controller
 RewriteRule ^ index.php [L]
 

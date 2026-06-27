@@ -30,6 +30,7 @@ class HomeController extends Controller
         $this->data = [
             'view' => 'home.php',
             'label' => 'views',
+            'has_footer' => true,
             'message' => $this->data['message'] ?? "",
             'portal_link' => "http://pfsense.idosr.net:8002/index.php?zone=ista",
             'csrf_token' => $this->data['csrf_token'] ?? CSRF::generateToken(),
@@ -38,6 +39,18 @@ class HomeController extends Controller
         return View::response(
             'views',
             'home.php',
+            $this->data
+        );
+    }
+    public function about(): Response
+    {
+        $this->data = [
+            'has_footer' => true,
+            'portal_link' => "http://pfsense.idosr.net:8002/index.php?zone=ista",
+        ];
+        return View::response(
+            'views',
+            'about.php',
             $this->data
         );
     }
@@ -91,6 +104,7 @@ class HomeController extends Controller
             $this->data['user'] = $result;
             $this->data['portal_link'] = "http://pfsense.idosr.net:8002/index.php?zone=ista";
             $this->data['client_ip'] = $request->ip();
+            $this->data['has_footer'] = true;
             return View::response(
                 'users_views',
                 'dashboard.php',
@@ -117,6 +131,7 @@ class HomeController extends Controller
         $this->data['type_name'] = 'username';
         $this->data['action'] = '/user/login';
         $this->data['title'] = 'Connexion utilisateur';
+        $this->data['has_footer'] = true;
         $this->data['type_notification'] = "Nom d'utilisateur non valide";
         $this->data['csrf_token'] =  $this->data['csrf_token'] ?? CSRF::generateToken();
         return $this->view();

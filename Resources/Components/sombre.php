@@ -2,6 +2,7 @@
 <button x-data="toggleDark()"
     x-init="init()"
     @click="toggle()"
+    style="cursor: pointer !important;"
     class=<?= $class ?? 'p-2 rounded-lg bg-white dark:bg-gray-800 shadow hover:shadow-md transition-all duration-300 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white' ?>>
     <svg x-show="!isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>

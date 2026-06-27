@@ -3,7 +3,7 @@
 use Core\File;
 use Core\Routing\Http\Request;
 use Core\Routing\Router;
-use App\Configuration;
+use Core\System\Environment;
 
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -22,14 +22,15 @@ File::init(ROOT_DIR);
 
 $router = Router::create();
 $request = Request::create();
-if (!Configuration::isComplete()) {
-    File::include('routes', 'installation.php', ['router' => $router]);
-} else {
-    File::include('routes', 'assets.php', ['router' => $router]);
+$env = new Environment();
+if ($env->has('APP_START_UP')) {
     File::include('routes', 'middlewares.php', ['router' => $router]);
     File::include('routes', 'public.php', ['router' => $router]);
     File::include('routes', 'dashboard.php', ['router' => $router]);
+} else {
+    File::include('routes', 'installation.php', ['router' => $router]);
 }
+File::include('routes', 'assets.php', ['router' => $router]);
 
 $response = $router->dispatch($request);
 $response->send();

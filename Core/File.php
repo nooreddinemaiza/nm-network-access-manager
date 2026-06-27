@@ -30,7 +30,9 @@ class File
         'components' => '/Resources/Components/',
         'partials' => '/Resources/Parts/',
         'styles' => '/Public/Assets/styles/',
+        'adminStyles' => '/Public/Assets/styles/admin/',
         'scripts' => '/Public/Assets/scripts/',
+        'adminScripts' => '/Public/Assets/scripts/admin/',
         'images' => '/Public/Assets/images/',
         'routes' => '/Routes/',
     ];

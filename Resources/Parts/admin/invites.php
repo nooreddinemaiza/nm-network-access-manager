@@ -83,7 +83,7 @@
                             </select>
 
                             <!-- Bouton Nouveau lien -->
-                            <button @click="$store.addLinkModal.open()"
+                            <button @click="$store.addLinkModal.open();closeModal();"
                                 class="inline-flex items-center gap-1.5 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg font-medium transition-colors whitespace-nowrap">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path
@@ -254,41 +254,41 @@
                         </div>
                     </div>
 
-                    <!-- Pagination compacte -->
-                    <div x-show="totalPages > 1 && !loading"
-                        class="bg-white dark:bg-gray-800 px-4 py-3 border-t border-gray-200 dark:border-gray-700">
-                        <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
-                            <div class="text-xs text-gray-600 dark:text-gray-400">
-                                <span class="font-semibold" x-text="startIndex + 1"></span>-<span class="font-semibold"
-                                    x-text="endIndex"></span> sur <span class="font-semibold"
-                                    x-text="filteredlinks.length"></span>
-                            </div>
+                </div>
+                <!-- Pagination compacte -->
+                <div x-show="totalPages > 1 && !loading"
+                    class="bg-white dark:bg-gray-800 px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
+                        <div class="text-xs text-gray-600 dark:text-gray-400">
+                            <span class="font-semibold" x-text="startIndex + 1"></span>-<span class="font-semibold"
+                                x-text="endIndex"></span> sur <span class="font-semibold"
+                                x-text="filteredlinks.length"></span>
+                        </div>
 
-                            <div class="flex items-center gap-1">
-                                <!-- Précédent -->
-                                <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1"
-                                    :class="currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200 dark:hover:bg-gray-600'"
-                                    class="px-3 py-1.5 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded transition-colors font-medium">
-                                    ←
-                                </button>
+                        <div class="flex items-center gap-1">
+                            <!-- Précédent -->
+                            <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1"
+                                :class="currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200 dark:hover:bg-gray-600'"
+                                class="px-3 py-1.5 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded transition-colors font-medium">
+                                ←
+                            </button>
 
-                                <!-- Pages -->
-                                <template x-for="page in visiblePages" :key="page">
-                                    <button @click="goToPage(page)"
-                                        :class="page === currentPage ? 
+                            <!-- Pages -->
+                            <template x-for="page in visiblePages" :key="page">
+                                <button @click="goToPage(page)"
+                                    :class="page === currentPage ? 
                                'bg-blue-600 text-white hover:bg-blue-700' : 
                                'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'"
-                                        class="px-3 py-1.5 text-xs rounded transition-colors font-medium min-w-[32px]"
-                                        x-text="page"></button>
-                                </template>
+                                    class="px-3 py-1.5 text-xs rounded transition-colors font-medium min-w-[32px]"
+                                    x-text="page"></button>
+                            </template>
 
-                                <!-- Suivant -->
-                                <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages"
-                                    :class="currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200 dark:hover:bg-gray-600'"
-                                    class="px-3 py-1.5 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded transition-colors font-medium">
-                                    →
-                                </button>
-                            </div>
+                            <!-- Suivant -->
+                            <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages"
+                                :class="currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200 dark:hover:bg-gray-600'"
+                                class="px-3 py-1.5 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded transition-colors font-medium">
+                                →
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -297,6 +297,13 @@
                 <div
                     class="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-t border-gray-200 dark:border-gray-700 rounded-b-xl">
                     <div class="flex justify-end items-center gap-3">
+                        <button @click="loadlinks()"
+                            class="px-4 py-2 text-sm bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors">
+                            <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                            </svg>
+                            Actualiser
+                        </button>
                         <button @click="closeModal()"
                             class="px-4 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors font-medium">
                             Fermer
