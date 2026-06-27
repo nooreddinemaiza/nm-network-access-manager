@@ -1,4 +1,4 @@
-# FreeRADIUS Captive Portal Management Platform
+# NM Network Access Manager
 
 Plateforme web de gestion centralisée des utilisateurs d'un portail captif basée sur FreeRADIUS, développée en PHP orienté objet.
 
