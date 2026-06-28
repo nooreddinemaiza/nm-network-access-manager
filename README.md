@@ -52,10 +52,10 @@ Clonez ce dépôt directement dans le répertoire racine de votre serveur web :
 
 ```bash
 cd /var/www/
-git clone https://github.com/votre-utilisateur/freeradius-dashboard.git
+git clone https://github.com/votre-utilisateur/nm-network-access-manager.git
 ```
 
-> Vous pouvez renommer le dossier cloné selon vos préférences ou conserver le nom `freeradius-dashboard`.
+> Vous pouvez renommer le dossier cloné selon vos préférences ou conserver le nom `nm-network-access-manager`.
 
 ---
 
@@ -64,7 +64,7 @@ git clone https://github.com/votre-utilisateur/freeradius-dashboard.git
 Créez un fichier de configuration pour votre site. Par exemple :
 
 ```bash
-sudo nano /etc/apache2/sites-available/freeradius-dashboard.conf
+sudo nano /etc/apache2/sites-available/nm-network-access-manager.conf
 ```
 
 Exemple de configuration minimale :
@@ -72,15 +72,15 @@ Exemple de configuration minimale :
 ```apache
 <VirtualHost *:80>
     ServerName votre-domaine.local
-    DocumentRoot /var/www/freeradius-dashboard
+    DocumentRoot /var/www/nm-network-access-manager
 
-    <Directory /var/www/freeradius-dashboard>
+    <Directory /var/www/nm-network-access-manager>
         AllowOverride All
         Require all granted
     </Directory>
 
-    ErrorLog ${APACHE_LOG_DIR}/freeradius-dashboard-error.log
-    CustomLog ${APACHE_LOG_DIR}/freeradius-dashboard-access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/nm-network-access-manager-error.log
+    CustomLog ${APACHE_LOG_DIR}/nm-network-access-manager-access.log combined
 </VirtualHost>
 ```
 
@@ -91,7 +91,7 @@ Exemple de configuration minimale :
 Activez le VirtualHost, puis rechargez Apache :
 
 ```bash
-sudo a2ensite freeradius-dashboard.conf
+sudo a2ensite nm-network-access-manager.conf
 sudo systemctl reload apache2
 ```
 
@@ -105,8 +105,8 @@ Avant d'ouvrir le navigateur, accordez les droits nécessaires à l'utilisateur 
 - `apache` sur CentOS / RHEL / Fedora
 
 ```bash
-sudo chown -R www-data:www-data /var/www/freeradius-dashboard/
-sudo chmod -R 2775 /var/www/freeradius-dashboard/
+sudo chown -R www-data:www-data /var/www/nm-network-access-manager/
+sudo chmod -R 2775 /var/www/nm-network-access-manager/
 ```
 
 > Remplacez `www-data` par `apache` si nécessaire selon votre configuration.
@@ -180,8 +180,8 @@ Les scripts suivants se trouvent dans le dossier `/Storage/Files/` du projet.
 > ⚠️ **Important :** Copiez ces scripts vers un emplacement sécurisé sur votre système (par exemple `/usr/local/bin/` ou `/opt/scripts/`) et supprimez les originaux du dossier `/Storage/Files/` une fois en place.
 
 ```bash
-sudo cp /var/www/freeradius-dashboard/Storage/Files/dns_extractor.sh /usr/local/bin/
-sudo cp /var/www/freeradius-dashboard/Storage/Files/dns-daily-sync.sh /usr/local/bin/
+sudo cp /var/www/nm-network-access-manager/Storage/Files/dns_extractor.sh /usr/local/bin/
+sudo cp /var/www/nm-network-access-manager/Storage/Files/dns-daily-sync.sh /usr/local/bin/
 sudo chmod +x /usr/local/bin/dns_extractor.sh
 sudo chmod +x /usr/local/bin/dns-daily-sync.sh
 ```
